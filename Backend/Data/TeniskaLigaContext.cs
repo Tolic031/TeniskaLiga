@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Data
 {
-    public class EdunovaContext:DbContext
+    public class TeniskaLigaContext:DbContext
     {
 
-        public EdunovaContext(DbContextOptions<EdunovaContext>options)
+        public TeniskaLigaContext(DbContextOptions<TeniskaLigaContext>options)
             : base(options) {
         }
 

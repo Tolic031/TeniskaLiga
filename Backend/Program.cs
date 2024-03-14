@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //dodavanje baze podataka
-builder.Services.AddDbContext<EdunovaContext>(o =>
+builder.Services.AddDbContext<TeniskaLigaContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("EdunovaContext"));
 });
