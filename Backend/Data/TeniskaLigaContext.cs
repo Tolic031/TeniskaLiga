@@ -11,6 +11,7 @@ namespace Backend.Data
         }
 
         public DbSet<Natjecatelj>Natjecatelji { get; set; }
+        public DbSet<Sezona> Sezone { get; set; }
 
     }
 }
