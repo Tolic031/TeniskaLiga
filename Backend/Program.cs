@@ -18,11 +18,11 @@ builder.Services.AddDbContext<TeniskaLigaContext>(o =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 
 app.UseHttpsRedirection();
 
@@ -30,4 +30,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// za potrebe produkcije
+app.UseStaticFiles();
+app.UseDefaultFiles();
+app.MapFallbackToFile("index.html");
+
 app.Run();
+
+////dajana
