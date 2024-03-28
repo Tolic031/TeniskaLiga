@@ -24,6 +24,13 @@ namespace Backend.Controllers
             return new JsonResult(_context.Natjecatelji.ToList());
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public IActionResult GetById(int id)
+        {
+            return new JsonResult(_context.Natjecatelji.Find(id));
+        }
+
         [HttpPost]
         public ActionResult Post(Natjecatelj natjecatelj)
         {
