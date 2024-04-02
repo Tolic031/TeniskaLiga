@@ -24,14 +24,14 @@ export default function NatjecateljiDodaj(){
         const podaci = new FormData(e.target);
 
         const natjecatelj = {
-            Ime: podaci.get('Ime'),  // 'naziv' je name atribut u Form.Control
-            Prezime: podaci.get('Prezime'), 
-            Broj_Telefona: podaci.get('Broj telefona'),
-            Email: podaci.get('Email'),  
-            Clan: podaci.get('Član')=='on' ? true : false            
+            ime: podaci.get('Ime'),  // 'naziv' je name atribut u Form.Control
+            prezime: podaci.get('Prezime'), 
+            broj_Telefona: podaci.get('broj_Telefona'),
+            email: podaci.get('Email'),  
+            clan: podaci.get('Clan')=='on' ? true : false            
         };
 
-        //console.log(natjecatelj);
+        console.log(natjecatelj);
         dodaj(natjecatelj);
 
     }
@@ -53,7 +53,7 @@ export default function NatjecateljiDodaj(){
 
                 <Form.Group controlId="Broj Telefona">
                     <Form.Label>Broj_Telefona</Form.Label>
-                    <Form.Control type="text" name="Broj Telefona" />
+                    <Form.Control type="text" name="broj_Telefona" />
                 </Form.Group>
 
                 <Form.Group controlId="Email">
@@ -62,7 +62,7 @@ export default function NatjecateljiDodaj(){
                 </Form.Group>
 
                 <Form.Group controlId="Član">
-                    <Form.Check label="Član" name="Član" />
+                    <Form.Check label="Član" name="Clan" />
                 </Form.Group>
 
                 <hr />

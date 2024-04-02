@@ -6,16 +6,16 @@ async function get(){
     return await HttpService.get(naziv)
     .then((odgovor)=>{
         //console.table(odgovor.data);
-        return odgovor.data;
+        return {greska: false, poruka: odgovor.data};
     })
     .catch((e)=>{
         //console.log(e);
-        return e;
+        return {greska: true, poruka: e};
     })
 }
 
-async function post(smjer){
-    return await HttpService.post(naziv,smjer)
+async function post(natjecatelj){
+    return await HttpService.post(naziv,natjecatelj)
     .then((odgovor)=>{
         //console.table(odgovor.data);
         return {greska: false, poruka: odgovor.data};
@@ -26,8 +26,8 @@ async function post(smjer){
     })
 }
 
-async function put(sifra,smjer){
-    return await HttpService.put(naziv + '/'+sifra,smjer)
+async function put(id,natjecatelj){
+    return await HttpService.put(naziv + '/'+id,natjecatelj)
     .then((odgovor)=>{
         //console.table(odgovor.data);
         return {greska: false, poruka: odgovor.data};
@@ -38,8 +38,8 @@ async function put(sifra,smjer){
     })
 }
 
-async function _delete(sifraSmjera){
-    return await HttpService.delete(naziv + '/'+sifraSmjera)
+async function _delete(idNatjecatelja){
+    return await HttpService.delete(naziv + '/'+idNatjecatelja)
     .then((odgovor)=>{
         //console.table(odgovor.data);
         return {greska: false, poruka: odgovor.data.poruka};
@@ -50,8 +50,8 @@ async function _delete(sifraSmjera){
     })
 }
 
-async function getBySifra(sifra){
-    return await HttpService.get(naziv+'/'+sifra)
+async function getById(id){
+    return await HttpService.get(naziv+'/'+id)
     .then((o)=>{
         return {greska: false, poruka: o.data}
     })
@@ -65,6 +65,6 @@ export default{
     get,
     post,
     _delete,
-    getBySifra,
+    getById,
     put
 }

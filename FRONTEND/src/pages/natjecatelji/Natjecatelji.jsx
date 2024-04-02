@@ -7,14 +7,14 @@ import {RoutesNames} from '../../constants'
 
 
 export default function Natjecatelji(){
-    const [natjecatelji, setNatjecatelji] = useState();
+    const [natjecatelji, setNatjecatelji] = useState([]);
     const navigate = useNavigate();
 
 
     async function dohvatiNatjecatelje(){
         await NatjecateljService.get()
         .then((odg)=>{
-            setNatjecatelji(odg);
+            setNatjecatelji(odg.poruka);
         })
         .catch((e)=>{
             console.log(e);
@@ -49,7 +49,7 @@ export default function Natjecatelji(){
                         <tr>
                             <th>Ime</th>
                             <th>Prezime</th>
-                            <th>Broj_Telefona</th>
+                            <th>Broj Telefona</th>
                             <th>Email</th>
                             <th>Clan</th>
                         </tr>
@@ -57,11 +57,11 @@ export default function Natjecatelji(){
                     <tbody>
                         {natjecatelji && natjecatelji.map((natjecatelj,index)=>(
                             <tr key={index}>
-                                <td>{natjecatelj.Ime}</td>
-                                <td>{natjecatelj.Prezime}</td>
-                                <td>{natjecatelj.Broj_Telefona}</td>
-                                <td>{natjecatelj.Email}</td>
-                                <td>{natjecatelj.Clan}</td>
+                                <td>{natjecatelj.ime}</td>
+                                <td>{natjecatelj.prezime}</td>
+                                <td>{natjecatelj.broj_Telefona}</td>
+                                <td>{natjecatelj.email}</td>
+                                <td>{natjecatelj.clan}</td>
                              
                                 <td>
                                     <Button 

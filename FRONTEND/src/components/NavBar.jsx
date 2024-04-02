@@ -22,7 +22,7 @@ export default function NavBar(){
                 <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">
                     <Nav.Link 
-                    href="https://neispavani-001-site1.etempurl.com/swagger/index.html"
+                    href="https://neispavani-001-site1.etempurl.com/api/v1"
                     target='_blank'>API</Nav.Link>
                     
                     <NavDropdown title="Programi" id="collapsible-nav-dropdown">

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 export default function NatjecateljiPromjena(){
     const navigate = useNavigate();
     const routeParams = useParams();
-    const [natjecatelj, setNatjecatelji] = useState({});
+    const [natjecatelj, setNatjecatelj] = useState({});
 
    async function dohvatiNatjecatelje(){
         const o = await NatjecateljService.getById(routeParams.id);
@@ -43,9 +43,9 @@ export default function NatjecateljiPromjena(){
         const natjecatelj = {
             Ime: podaci.get('Ime'),  // 'naziv' je name atribut u Form.Control
             Prezime: podaci.get('Prezime'), 
-            Broj_Telefona: podaci.get('Broj telefona'),
+            broj_Telefona: podaci.get('broj_Telefona'),
             Email: podaci.get('Email'),  
-            Clan: podaci.get('Član')=='on' ? true : false             
+            Clan: podaci.get('clan')=='on' ? true : false             
         };
         //console.log(routeParams.sifra);
         //console.log(smjer);
@@ -63,7 +63,7 @@ export default function NatjecateljiPromjena(){
                     <Form.Control 
                     type="text" 
                     name="Ime" 
-                    defaultValue={natjecatelj.Ime}
+                    defaultValue={natjecatelj.ime}
                     required />
                 </Form.Group>
 
@@ -72,17 +72,17 @@ export default function NatjecateljiPromjena(){
                     <Form.Control 
                     type="text" 
                     name="Prezime"
-                    defaultValue={natjecatelj.Prezime}
+                    defaultValue={natjecatelj.prezime}
                      />
                 </Form.Group>
 
 
-                <Form.Group controlId="Broj Telefona">
-                    <Form.Label>Broj_Telefona</Form.Label>
+                <Form.Group controlId="broj_Telefona">
+                    <Form.Label>broj_Telefona</Form.Label>
                     <Form.Control 
                     type="text" 
-                    name="Broj Telefona" 
-                    defaultValue={natjecatelj.Broj_Telefona}
+                    name="broj_Telefona" 
+                    defaultValue={natjecatelj.broj_Telefona}
                     required />
                 </Form.Group>
 
@@ -91,7 +91,7 @@ export default function NatjecateljiPromjena(){
                     <Form.Control 
                     type="text" 
                     name="Email" 
-                    defaultValue={natjecatelj.Email}
+                    defaultValue={natjecatelj.email}
                     required />
                 </Form.Group>
 

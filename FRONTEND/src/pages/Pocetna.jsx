@@ -6,7 +6,7 @@ export default function Pocetna(){
     return(
         <>
            <Container>
-            Dobrodošli na Edunova aplikaciju
+            Dobrodošli na Tenisku Ligu
            </Container>
         </>
     );
