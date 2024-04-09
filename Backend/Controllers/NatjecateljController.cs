@@ -1,87 +1,37 @@
 ﻿using Backend.Data;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Text;
+using static Backend.Controllers.UniverzalniController;
 
-namespace Backend.Controllers
+namespace EdunovaAPP.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class NatjecateljController:ControllerBase
+    public class NatjecateljController : EdunovaController<Natjecatelj, NatjecateljDTORead, NatjecateljDTOInsertUpdate>
     {
-        private readonly TeniskaLigaContext _context;
-
-        //Dependency injection
-        //U konstruktoru primiš instancu i dodijeliš privatnom svojstvu
-
-        public NatjecateljController(TeniskaLigaContext context)
+        public NatjecateljController(TeniskaLigaContext context) : base(context)
         {
-            _context = context;
+            DbSet = _context.Natjecatelji;
+        }
+        protected override void KontrolaBrisanje(Natjecatelj entitet)
+        {
+            var lista = _context.Mecevi
+                .Where(x => x.Natjecatelj.Id == entitet.Id)
+                .ToList();
+            if (lista != null && lista.Count > 0)
+            {
+                StringBuilder sb = new();
+                sb.Append("Natjecatelj se ne može obrisati jer je postavljen na mečevima: ");
+                foreach (var e in lista)
+                {
+                    sb.Append(e.Natjecatelj).Append(", ");
+                }
+                throw new Exception(sb.ToString()[..^2]); // umjesto sb.ToString().Substring(0, sb.ToString().Length - 2)
+            }
         }
 
-        [HttpGet]
-        public ActionResult Get()
-        {
-            return new JsonResult(_context.Natjecatelji.ToList());
-        }
-
-        [HttpGet]
-        [Route("{id:int}")]
-        public IActionResult GetById(int id)
-        {
-            return new JsonResult(_context.Natjecatelji.Find(id));
-        }
-
-        [HttpPost]
-        public ActionResult Post(Natjecatelj natjecatelj)
-        {
-
-            _context.Natjecatelji.Add(natjecatelj);
-            _context.SaveChanges();
-            return new JsonResult(natjecatelj);
-        }
-
-        [HttpDelete]
-        [Route("{id:int}")]
-        [Produces("application/json")]
-
-        public ActionResult Delete(int id)
-        {
-            var SmjerIzBaze = _context.Natjecatelji.Find(id);
-
-            _context.Natjecatelji.Remove(SmjerIzBaze);
-            _context.SaveChanges();
-            return new JsonResult(new { poruka = "obrisano" });
-
-        }
-
-        [HttpPut]
-        [Route("{id:int}")]
-
-        public IActionResult Put(int id, Natjecatelj natjecatelj)
-        {
-
-            var SmjerIzBaze = _context.Natjecatelji.Find(id);
-            SmjerIzBaze.Ime = natjecatelj.Ime;
-            SmjerIzBaze.Prezime = natjecatelj.Prezime;
-            SmjerIzBaze.Broj_Telefona = natjecatelj.Broj_Telefona;
-            SmjerIzBaze.Email = natjecatelj.Email;
-            SmjerIzBaze.Clan = natjecatelj.Clan;
-
-            _context.Natjecatelji.Update(SmjerIzBaze);
-            _context.SaveChanges();
-
-            return new JsonResult(SmjerIzBaze);
-
-
-
-
-
-        }
-
-
-
-
-
-       
     }
 }

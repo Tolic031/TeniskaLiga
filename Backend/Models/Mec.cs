@@ -5,10 +5,10 @@ namespace Backend.Models
     public class Mec:Entitet
     {
         [ForeignKey("izazivac")]
-        public required Izazivac Izazivac { get; set; }
+        public required Mec Izazivac { get; set; }
 
         [ForeignKey("izazvani")]
-        public required Izazvani Izazvani { get; set; }
+        public required Mec Izazvani { get; set; }
         public string? Pobjednik { get; set; }
         public DateTime? Datum { get; set; }
         public int? Red { get; set; }
