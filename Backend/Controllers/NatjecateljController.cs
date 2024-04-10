@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using static Backend.Controllers.UniverzalniController;
 
-namespace EdunovaAPP.Controllers
+namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
