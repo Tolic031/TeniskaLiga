@@ -1,141 +1,57 @@
 ﻿using Backend.Data;
-using Backend.Mappers;
 using Backend.Models;
+using Backend.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+using static Backend.Controllers.UniverzalniController;
 
 namespace Backend.Controllers
 {
-    public abstract class BackendController<T,TDR,TDI>(TeniskaLigaContext context) : ControllerBase where T : Entitet
+    [ApiController]
+    [Route("api/v1/[controller]")]
+    public class MecController : EdunovaController<Mec, GrupaDTORead, GrupaDTOInsertUpdate>
     {
-        protected DbSet<T>? DbSet = null;
-
-        protected Mapping<T, TDR, TDI> _mapper = new();
-        protected abstract void KontrolaBrisanje(T entitet);
-  
-        protected readonly TeniskaLigaContext _context = context;
-
-        [HttpGet]
-        public IActionResult Get()
+        public MecController(TeniskaLigaContext context) : base(context)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                return new JsonResult(UcitajSve());
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            DbSet = _context.Mecevi;
+            _mapper = new MecMapper();
         }
-        [HttpGet]
-        [Route("{id:int}")]
-        public IActionResult GetById(int id)
+        protected override void KontrolaBrisanje(Mec entitet)
         {
-            if (!ModelState.IsValid ||id <= 0)
+            if (entitet != null && entitet.Natjecatelj != null && entitet.Natjecatelj.Count() > 0)
             {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var entitet =NadiEntitet(id);
-                return new JsonResult(_mapper.MapInsertUpdateToDTO(entitet));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-      
-
-        [HttpPost]
-        public IActionResult Post(TDI entitetDTO)
-        {
-            if (!ModelState.IsValid || entitetDTO == null)
-            {
-                return BadRequest(ModelState);
-            }
-            try
-            {
-                var entitet = KreirajEntitet(entitetDTO);
-                _context.Add(entitet);
-                _context.SaveChanges();
-                return StatusCode(StatusCodes.Status201Created,
-                                       _mapper.MapReadToDTO(entitet));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut]
-        [Route("{id:int}")]
-        public IActionResult Put(int id, TDI dto)
-        {
-            if (id <= 0 || !ModelState.IsValid || dto == null)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var entitetIzBaze = NadiEntitet(id);
-                _context.Entry(entitetIzBaze).State = EntityState.Detached;
-                var entitet = PromjeniEntitet(dto, entitetIzBaze);
-                entitet.Id = id;
-                _context.Update(entitet);
-                _context.SaveChanges();
-
-                return StatusCode(StatusCodes.Status200OK, _mapper.MapReadToDTO(entitet));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpDelete]
-        [Route("{id:int}")]
-        public IActionResult Delete(int id)
-        {
-            if (!ModelState.IsValid || id <= 0)
-            {
-                return BadRequest();
-            }
-            try
-            {
-                var entitetIzbaze = NadiEntitet(id);
-                KontrolaBrisanje(entitetIzbaze);
-                _context.Remove(entitetIzbaze);
-                _context.SaveChanges();
-                return Ok("Obrisano"); 
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+                StringBuilder sb = new StringBuilder();
+                sb.Append("Grupa se ne može obrisati jer su na njon polaznici: ");
+                foreach (var e in entitet.Natjecatelj)
+                {
+                    sb.Append(e.Ime).Append(' ').Append(e.Prezime).Append(", ");
                 }
-        }
 
-
-        protected virtual T NadiEntitet(int id)
-        {
-            var entitetIzbaze = DbSet?.Find(id);
-            if (entitetIzbaze == null)
-            {
-                throw new Exception("Ne postoji entitet s šifrom " + id + " u bazi");
+                throw new Exception(sb.ToString()[..^2]);
             }
-
-            return entitetIzbaze;
         }
 
-        protected virtual List<TDR> UcitajSve()
+        protected override Grupa KreirajEntitet(GrupaDTOInsertUpdate dto)
         {
-            var lista = DbSet?.ToList();
+            var smjer = _context.Smjerovi.Find(dto.SmjerSifra) ?? throw new Exception("Ne postoji smjer s šifrom " + dto.SmjerSifra + " u bazi");
+            var predavac = _context.Predavaci.Find(dto.PredavacSifra) ?? throw new Exception("Ne postoji predavač s šifrom " + dto.PredavacSifra + " u bazi");
+            var entitet = _mapper.MapInsertUpdatedFromDTO(dto);
+            entitet.Polaznici = []; // može i new List<Polaznik>()
+            entitet.Smjer = smjer;
+            entitet.Predavac = predavac;
+            return entitet;
+        }
+
+        protected override List<GrupaDTORead> UcitajSve()
+        {
+            var lista = _context.Grupe
+                    .Include(g => g.Smjer)
+                    .Include(g => g.Predavac)
+                    .Include(g => g.Polaznici)
+                    .ToList();
             if (lista == null || lista.Count == 0)
             {
                 throw new Exception("Ne postoje podaci u bazi");
@@ -143,15 +59,34 @@ namespace Backend.Controllers
             return _mapper.MapReadList(lista);
         }
 
-        protected virtual T KreirajEntitet(TDI dto)
+        protected override Grupa NadiEntitet(int sifra)
         {
-            return _mapper.MapInsertUpdatedFromDTO(dto);
+            return _context.Grupe.Include(i => i.Smjer).Include(i => i.Predavac)
+                    .Include(i => i.Polaznici).FirstOrDefault(x => x.Sifra == sifra) ?? throw new Exception("Ne postoji grupa s šifrom " + sifra + " u bazi");
         }
 
-        protected virtual T PromjeniEntitet(TDI dto, T s)
-        {
-            return _mapper.MapInsertUpdatedFromDTO(dto);
-        }
 
+
+        protected override Grupa PromjeniEntitet(GrupaDTOInsertUpdate dto, Grupa entitet)
+        {
+            var smjer = _context.Smjerovi.Find(dto.SmjerSifra) ?? throw new Exception("Ne postoji smjer s šifrom " + dto.SmjerSifra + " u bazi");
+            var predavac = _context.Predavaci.Find(dto.PredavacSifra) ?? throw new Exception("Ne postoji predavač s šifrom " + dto.PredavacSifra + " u bazi");
+
+
+            /*
+            List<Polaznik> polaznici = entitet.Polaznici;
+            entitet = _mapper.MapInsertUpdatedFromDTO(dto);
+            entitet.Polaznici = polaznici;
+            */
+
+            // ovdje je možda pametnije ići s ručnim mapiranje
+            entitet.MaksimalnoPolaznika = dto.Maksimalnopolaznika;
+            entitet.DatumPocetka = dto.Datumpocetka;
+            entitet.Naziv = dto.Naziv;
+            entitet.Smjer = smjer;
+            entitet.Predavac = predavac;
+
+            return entitet;
+        }
     }
 }
