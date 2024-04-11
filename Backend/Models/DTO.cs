@@ -12,9 +12,13 @@ namespace Backend.Models
         [Required(ErrorMessage = "Broj telefona obavezno")]
         string Broj_Telefona,
         [Required(ErrorMessage = "Član obavezno")]
-        bool Clan
+        bool Clan);
 
+    public record MecDTORead (
 
+ 
+
+  
 
         );
 }
