@@ -2,7 +2,7 @@
 
 namespace Backend.Models
 {
-  public record NatjecateljDTORead (string Ime, string Prezime, string Broj_Telefona, string? Email, bool Clan);
+  public record NatjecateljDTORead (int Id, string Ime, string Prezime, string Broj_Telefona, string? Email, bool Clan);
 
     public record NatjecateljDTOInsertUpdate(
         [Required(ErrorMessage = "Ime obavezno")]
@@ -12,9 +12,29 @@ namespace Backend.Models
         [Required(ErrorMessage = "Broj telefona obavezno")]
         string Broj_Telefona,
         [Required(ErrorMessage = "Član obavezno")]
-        bool Clan
+        bool Clan);
 
-
-
+    public record MecDTORead (
+        int Id,
+        string? Ime,
+        string? IzazvaniImePrezime,
+        DateTime? Datum,
+        string? Red,
+        string? Napomena,
+        DateTime? SezonaPocetak,
+        DateTime? SezonaKraj,
+        string? PobjednikImePrezime
         );
+
+    public record MecDTOInsertUpdate(
+       int? IzazivacId,
+       int? IzazvaniId,
+       DateTime? Datum,
+       string? Red,
+       string? Napomena,
+       int? SezonaId,
+       int? PobjednikId
+       );
+
+
 }

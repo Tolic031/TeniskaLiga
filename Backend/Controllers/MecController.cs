@@ -3,16 +3,12 @@ using Backend.Models;
 using Backend.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
-using static Backend.Controllers.UniverzalniController;
 
 namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class MecController : EdunovaController<Mec, GrupaDTORead, GrupaDTOInsertUpdate>
+    public class MecController : UniverzalniController<Mec, MecDTORead, MecDTOInsertUpdate>
     {
         public MecController(TeniskaLigaContext context) : base(context)
         {
@@ -21,36 +17,38 @@ namespace Backend.Controllers
         }
         protected override void KontrolaBrisanje(Mec entitet)
         {
-            if (entitet != null && entitet.Natjecatelj != null && entitet.Natjecatelj.Count() > 0)
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("Grupa se ne može obrisati jer su na njon polaznici: ");
-                foreach (var e in entitet.Natjecatelj)
-                {
-                    sb.Append(e.Ime).Append(' ').Append(e.Prezime).Append(", ");
-                }
-
-                throw new Exception(sb.ToString()[..^2]);
-            }
+           
         }
 
-        protected override Grupa KreirajEntitet(GrupaDTOInsertUpdate dto)
+        protected override Mec KreirajEntitet(MecDTOInsertUpdate dto)
         {
-            var smjer = _context.Smjerovi.Find(dto.SmjerSifra) ?? throw new Exception("Ne postoji smjer s šifrom " + dto.SmjerSifra + " u bazi");
-            var predavac = _context.Predavaci.Find(dto.PredavacSifra) ?? throw new Exception("Ne postoji predavač s šifrom " + dto.PredavacSifra + " u bazi");
-            var entitet = _mapper.MapInsertUpdatedFromDTO(dto);
-            entitet.Polaznici = []; // može i new List<Polaznik>()
-            entitet.Smjer = smjer;
-            entitet.Predavac = predavac;
+            var izazivac = _context.Natjecatelji.Find(dto.IzazivacId) ?? throw new Exception("Ne postoji natjecatelj s šifrom " + dto.IzazivacId + " u bazi");
+            var izazvani = _context.Natjecatelji.Find(dto.IzazvaniId) ?? throw new Exception("Ne postoji natjecatelj s šifrom " + dto.IzazvaniId + " u bazi");
+            var pobjednik = _context.Natjecatelji.Find(dto.PobjednikId) ?? throw new Exception("Ne postoji natjecatelj s šifrom " + dto.PobjednikId + " u bazi");
+            var sezona = _context.Sezone.Find(dto.SezonaId) ?? throw new Exception("Nema sezone");
+            var entitet = new Mec
+            {
+                Izazivac = izazivac,
+                Izazvani = izazvani,
+                Red = dto.Red,
+                Napomena = dto.Napomena,
+                Datum = dto.Datum
+            };
+
+            entitet.Izazivac = izazivac;
+            entitet.Izazvani = izazvani;
+            entitet.Pobjednik = pobjednik;
+            entitet.Sezona = sezona;
             return entitet;
         }
 
-        protected override List<GrupaDTORead> UcitajSve()
+        protected override List<MecDTORead> UcitajSve()
         {
-            var lista = _context.Grupe
-                    .Include(g => g.Smjer)
-                    .Include(g => g.Predavac)
-                    .Include(g => g.Polaznici)
+            var lista = _context.Mecevi
+                    .Include(g => g.Pobjednik)
+                    .Include(g => g.Izazvani)
+                    .Include(g => g.Izazivac)
+                    .Include(g => g.Sezona)
                     .ToList();
             if (lista == null || lista.Count == 0)
             {
@@ -59,18 +57,22 @@ namespace Backend.Controllers
             return _mapper.MapReadList(lista);
         }
 
-        protected override Grupa NadiEntitet(int sifra)
+        protected override Mec NadiEntitet(int id)
         {
-            return _context.Grupe.Include(i => i.Smjer).Include(i => i.Predavac)
-                    .Include(i => i.Polaznici).FirstOrDefault(x => x.Sifra == sifra) ?? throw new Exception("Ne postoji grupa s šifrom " + sifra + " u bazi");
+            return _context.Mecevi.Include(g => g.Pobjednik)
+                    .Include(g => g.Izazvani)
+                    .Include(g => g.Izazivac)
+                    .Include(g => g.Sezona).FirstOrDefault(x => x.Id == id) ?? throw new Exception("Ne postoji meč s šifrom " + id + " u bazi");
         }
 
 
 
-        protected override Grupa PromjeniEntitet(GrupaDTOInsertUpdate dto, Grupa entitet)
+        protected override Mec PromjeniEntitet(MecDTOInsertUpdate dto, Mec entitet)
         {
-            var smjer = _context.Smjerovi.Find(dto.SmjerSifra) ?? throw new Exception("Ne postoji smjer s šifrom " + dto.SmjerSifra + " u bazi");
-            var predavac = _context.Predavaci.Find(dto.PredavacSifra) ?? throw new Exception("Ne postoji predavač s šifrom " + dto.PredavacSifra + " u bazi");
+            var izazivac = _context.Natjecatelji.Find(dto.IzazivacId) ?? throw new Exception("Ne postoji natjecatelj s šifrom " + dto.IzazivacId + " u bazi");
+            var izazvani = _context.Natjecatelji.Find(dto.IzazvaniId) ?? throw new Exception("Ne postoji natjecatelj s šifrom " + dto.IzazvaniId + " u bazi");
+            var pobjednik = _context.Natjecatelji.Find(dto.PobjednikId) ?? throw new Exception("Ne postoji natjecatelj s šifrom " + dto.PobjednikId + " u bazi");
+            var sezona = _context.Sezone.Find(dto.SezonaId) ?? throw new Exception("Nema sezone");
 
 
             /*
@@ -80,11 +82,12 @@ namespace Backend.Controllers
             */
 
             // ovdje je možda pametnije ići s ručnim mapiranje
-            entitet.MaksimalnoPolaznika = dto.Maksimalnopolaznika;
-            entitet.DatumPocetka = dto.Datumpocetka;
-            entitet.Naziv = dto.Naziv;
-            entitet.Smjer = smjer;
-            entitet.Predavac = predavac;
+            entitet.Napomena = dto.Napomena;
+            entitet.Datum=dto.Datum;
+            entitet.Izazivac = izazivac;
+            entitet.Izazvani = izazvani;
+            entitet.Pobjednik = pobjednik;
+            entitet.Sezona = sezona;
 
             return entitet;
         }

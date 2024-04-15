@@ -5,20 +5,19 @@ namespace Backend.Models
     public class Mec:Entitet
     {
         [ForeignKey("izazivac")]
-        public required Mec Izazivac { get; set; }
+        public required Natjecatelj Izazivac { get; set; }
 
         [ForeignKey("izazvani")]
-        public required Mec Izazvani { get; set; }
-        public string? Pobjednik { get; set; }
+        public required Natjecatelj Izazvani { get; set; }
         public DateTime? Datum { get; set; }
-        public int? Red { get; set; }
+        public string? Red { get; set; }
         public string? Napomena { get; set; }
 
         [ForeignKey("sezona")]
         public Sezona? Sezona { get; set; }
 
-        [ForeignKey("natjecatelj")]
-        public Natjecatelj? Natjecatelj { get; set; }
+        [ForeignKey("pobjednik")]
+        public Natjecatelj? Pobjednik { get; set; }
 
 
     }

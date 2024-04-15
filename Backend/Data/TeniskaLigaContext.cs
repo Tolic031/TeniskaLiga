@@ -22,7 +22,7 @@ namespace Backend.Data
             modelBuilder.Entity<Mec>().HasOne(m => m.Izazivac);
             modelBuilder.Entity<Mec>().HasOne(m => m.Izazvani);
             modelBuilder.Entity<Mec>().HasOne(m => m.Sezona);
-            modelBuilder.Entity<Mec>().HasOne(m => m.Natjecatelj);
+            modelBuilder.Entity<Mec>().HasOne(m => m.Pobjednik);
         }
 
 

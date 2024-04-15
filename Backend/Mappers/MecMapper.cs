@@ -1,52 +1,52 @@
 ﻿using AutoMapper;
+using Backend.Models;
+using System.Text.RegularExpressions;
 
-namespace EdunovaAPP.Mappers
+namespace Backend.Mappers
 {
-    public class MecMapper<T, DTR, DTI>
+    public class MecMapper : Mapping<Mec,MecDTORead,MecDTOInsertUpdate>
     {
-
-        protected Mapper MapperMapReadToDTO;
-        protected Mapper MapperMapInsertUpdatedFromDTO;
-        protected Mapper MapperMapInsertUpdateToDTO;
 
         public MecMapper()
         {
             MapperMapReadToDTO = new Mapper(new MapperConfiguration(c => {
                 c.AllowNullDestinationValues = true;
-                c.CreateMap<T, DTR>();
+                c.CreateMap<Mec, MecDTORead>()
+                .ConstructUsing(entitet =>
+                 new MecDTORead(
+                    entitet.Id,
+                    entitet.Izazivac.Ime + " " + entitet.Izazivac.Prezime,
+                    entitet.Izazvani.Ime + " " + entitet.Izazvani.Prezime,
+                    entitet.Datum,
+                    entitet.Red,
+                    entitet.Napomena,
+                    entitet.Sezona==null ? entitet.Datum : entitet.Sezona.PocetakSezone,
+                    entitet.Sezona == null ? entitet.Datum : entitet.Sezona.KrajSezone,
+                    entitet.Pobjednik == null ? "" : (entitet.Pobjednik.Ime + " " + entitet.Pobjednik.Prezime)
+                    
+                    ));
             }));
+
             MapperMapInsertUpdatedFromDTO = new Mapper(new MapperConfiguration(c => {
-                c.CreateMap<DTI, T>();
+                c.CreateMap<MecDTOInsertUpdate, Mec>();
             }));
 
             MapperMapInsertUpdateToDTO = new Mapper(new MapperConfiguration(c => {
-                c.CreateMap<T, DTI>();
+                c.CreateMap<Mec, MecDTOInsertUpdate>()
+                .ConstructUsing(entitet =>
+                 new MecDTOInsertUpdate(
+                    entitet.Izazivac.Id,
+                    entitet.Izazvani.Id,
+                    entitet.Datum,
+                    entitet.Red,
+                    entitet.Napomena,
+                    entitet.Sezona == null ? null: entitet.Sezona.Id,
+                    entitet.Pobjednik == null ? null : entitet.Pobjednik.Id
+
+                     ));
             }));
+
         }
-
-        public List<DTR> MapReadList(List<T> lista)
-        {
-            var vrati = new List<DTR>();
-            lista.ForEach(e => { vrati.Add(MapReadToDTO(e)); });
-            return vrati;
-        }
-
-        public DTR MapReadToDTO(T entitet)
-        {
-            return MapperMapReadToDTO.Map<DTR>(entitet);
-        }
-
-        public T MapInsertUpdatedFromDTO(DTI entitet)
-        {
-            return MapperMapInsertUpdatedFromDTO.Map<T>(entitet);
-        }
-
-        public DTI MapInsertUpdateToDTO(T entitet)
-        {
-            return MapperMapInsertUpdateToDTO.Map<DTI>(entitet);
-        }
-
-
 
     }
 }

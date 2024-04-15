@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
-    public class UniverzalniController
-    {
 
-        public abstract class EdunovaController<T, TDR, TDI>(TeniskaLigaContext context) : ControllerBase where T : Entitet
+
+        public abstract class UniverzalniController<T, TDR, TDI>(TeniskaLigaContext context) : ControllerBase where T : Entitet
         {
             protected DbSet<T>? DbSet = null;
 
@@ -157,5 +156,5 @@ namespace Backend.Controllers
             }
 
         }
-    }
+    
 }
