@@ -17,7 +17,7 @@ export default function NavBar(){
                 <Navbar.Brand 
                 className='kursor'
                 onClick={()=>navigate(RoutesNames.HOME)}
-                >Edunova APP</Navbar.Brand>
+                >Teniska Liga</Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav className="me-auto">

@@ -19,16 +19,16 @@ export default function NatjecateljiDodaj(){
 
     function obradiSubmit(e){ // e predstavlja event
         e.preventDefault();
-        //alert('Dodajem smjer');
+        //alert('Dodajem natjecatelja');
 
         const podaci = new FormData(e.target);
 
         const natjecatelj = {
-            ime: podaci.get('Ime'),  // 'naziv' je name atribut u Form.Control
-            prezime: podaci.get('Prezime'), 
+            ime: podaci.get('ime'),  // 'naziv' je name atribut u Form.Control
+            prezime: podaci.get('prezime'), 
             broj_Telefona: podaci.get('broj_Telefona'),
-            email: podaci.get('Email'),  
-            clan: podaci.get('Clan')=='on' ? true : false            
+            email: podaci.get('email'),  
+            clan: podaci.get('clan')=='on' ? true : false            
         };
 
         console.log(natjecatelj);
@@ -41,28 +41,28 @@ export default function NatjecateljiDodaj(){
         <Container>
             <Form onSubmit={obradiSubmit}>
 
-                <Form.Group controlId="Ime">
+                <Form.Group controlId="ime">
                     <Form.Label>Ime</Form.Label>
-                    <Form.Control type="text" name="Ime" required />
+                    <Form.Control type="text" name="ime" required />
                 </Form.Group>
 
-                <Form.Group controlId="Prezime">
+                <Form.Group controlId="prezime">
                     <Form.Label>Prezime</Form.Label>
-                    <Form.Control type="text" name="Prezime" />
+                    <Form.Control type="text" name="prezime" />
                 </Form.Group>
 
-                <Form.Group controlId="Broj Telefona">
-                    <Form.Label>Broj_Telefona</Form.Label>
+                <Form.Group controlId="broj_Telefona">
+                    <Form.Label>Broj Telefona</Form.Label>
                     <Form.Control type="text" name="broj_Telefona" />
                 </Form.Group>
 
-                <Form.Group controlId="Email">
+                <Form.Group controlId="email">
                     <Form.Label>Email</Form.Label>
-                    <Form.Control type="text" name="Email" />
+                    <Form.Control type="text" name="email" />
                 </Form.Group>
 
-                <Form.Group controlId="Član">
-                    <Form.Check label="Član" name="Clan" />
+                <Form.Group controlId="clan">
+                    <Form.Check label="Član" name="clan" />
                 </Form.Group>
 
                 <hr />

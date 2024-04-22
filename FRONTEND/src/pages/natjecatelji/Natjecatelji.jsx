@@ -25,6 +25,16 @@ export default function Natjecatelji(){
         dohvatiNatjecatelje();
     },[]);
 
+    function formatirajClan(c){
+        if (c==null){
+        return 'Nije definirano';
+        }
+        if (c){
+           return 'DA';
+        }
+        return 'NE';  
+    }
+
 
     async function obrisiAsync(id){
         const odgovor = await NatjecateljService._delete(id);
@@ -34,6 +44,18 @@ export default function Natjecatelji(){
             return;
         }
         dohvatiNatjecatelje();
+    }
+
+    function Clan(Natjecatelji){
+        if (Natjecatelji.Clan==null) return 'gray';
+        if(Natjecatelji.Clan) return 'green';
+        return 'red';
+    }
+
+    function ClanTitle(Natjecatelji){
+        if (Natjecatelji.Clan==null) return 'Nije definirano';
+        if(Natjecatelji.Clan) return 'Verificiran';
+        return 'NIJE verificiran';
     }
 
     function obrisi(id){
@@ -51,7 +73,7 @@ export default function Natjecatelji(){
                             <th>Prezime</th>
                             <th>Broj Telefona</th>
                             <th>Email</th>
-                            <th>Clan</th>
+                            <th>Član</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -61,7 +83,13 @@ export default function Natjecatelji(){
                                 <td>{natjecatelj.prezime}</td>
                                 <td>{natjecatelj.broj_Telefona}</td>
                                 <td>{natjecatelj.email}</td>
-                                <td>{natjecatelj.clan}</td>
+                                <td>
+                                    {formatirajClan(natjecatelj.clan)}
+                                    {/* {natjecatelj.clan == null
+                                    ? 'Nije definirano'
+                                    : natjecatelj.clan ? 'DA' : 'NE'}
+                                    */}
+                                    </td>
                              
                                 <td>
                                     <Button 
