@@ -11,6 +11,8 @@ namespace Backend.Models
         string Prezime,
         [Required(ErrorMessage = "Broj telefona obavezno")]
         string Broj_Telefona,
+        [Required(ErrorMessage = "Email obavezno")]
+        string Email,
         [Required(ErrorMessage = "Član obavezno")]
         bool Clan);
 
