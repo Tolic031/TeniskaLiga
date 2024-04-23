@@ -25,7 +25,7 @@ export default function NavBar(){
                     href="https://neispavani-001-site1.etempurl.com/api/v1"
                     target='_blank'>API</Nav.Link>
                     
-                    <NavDropdown title="Programi" id="collapsible-nav-dropdown">
+                    <NavDropdown title="Izbornik" id="collapsible-nav-dropdown">
                     <NavDropdown.Item 
                     onClick={()=>navigate(RoutesNames.NATJECATELJ_PREGLED)}
                     >Natjecatelji</NavDropdown.Item>
