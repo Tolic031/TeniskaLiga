@@ -16,6 +16,18 @@ namespace Backend.Models
         [Required(ErrorMessage = "Član obavezno")]
         bool Clan);
 
+    public record SezonaDTORead(int Id, DateTime PocetakSezone, DateTime KrajSezone, string Cijena );
+
+    public record SezonaDTOInsertUpdate(
+        [Required(ErrorMessage = "Unesi datum početka sezone")]
+        DateTime PocetakSezone,
+        [Required(ErrorMessage = "Unesi datum završetka sezone")]
+        DateTime KrajSezone,
+        [Required(ErrorMessage = "Unesi cijenu")]
+        string Cijena);
+
+
+
     public record MecDTORead (
         int Id,
         string? Ime,

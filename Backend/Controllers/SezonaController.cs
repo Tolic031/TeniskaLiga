@@ -1,72 +1,37 @@
 ﻿using Backend.Data;
 using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Backend.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class SezonaController:ControllerBase
+    public class SezonaController : UniverzalniController<Sezona, SezonaDTORead, SezonaDTOInsertUpdate>
     {
-        private readonly TeniskaLigaContext _context;
-
-       
-
-        public SezonaController(TeniskaLigaContext context)
+        public SezonaController(TeniskaLigaContext context) : base(context)
         {
-            _context = context;
+            DbSet = _context.Sezone;
+        }
+        protected override void KontrolaBrisanje(Sezona entitet)
+        {
+            var lista = _context.Mecevi
+                .Where(x => x.Izazivac.Id == entitet.Id || x.Izazvani.Id == entitet.Id
+                || x.Pobjednik!.Id == entitet.Id)
+                .ToList();
+            if (lista != null && lista.Count > 0)
+            {
+                StringBuilder sb = new();
+                sb.Append("Sezona se ne može obrisati ");
+                foreach (var e in lista)
+                {
+                    sb.Append(e.Napomena).Append(", ");
+                }
+                throw new Exception(sb.ToString()[..^2]); // umjesto sb.ToString().Substring(0, sb.ToString().Length - 2)
+            }
         }
 
-        [HttpGet]
-        public ActionResult Get()
-        {
-            return new JsonResult(_context.Sezone.ToList());
-        }
-
-        [HttpPost]
-        public ActionResult Post(Sezona sezona)
-        {
-
-            _context.Sezone.Add(sezona);
-            _context.SaveChanges();
-            return new JsonResult(sezona);
-        }
-
-        [HttpDelete]
-        [Route("{id:int}")]
-        [Produces("application/json")]
-
-        public ActionResult Delete(int id)
-        {
-            var SmjerIzBaze = _context.Sezone.Find(id);
-
-            _context.Sezone.Remove(SmjerIzBaze);
-            _context.SaveChanges();
-            return new JsonResult(new { poruka = "obrisano" });
-
-        }
-
-        [HttpPut]
-        [Route("{id:int}")]
-
-        public IActionResult Put(int id, Sezona sezona)
-        {
-
-            var SmjerIzBaze = _context.Sezone.Find(id);
-            SmjerIzBaze.PocetakSezone = sezona.PocetakSezone;
-            SmjerIzBaze.KrajSezone = sezona.KrajSezone;
-            SmjerIzBaze.Cijena = sezona.Cijena;
-
-
-            _context.Sezone.Update(SmjerIzBaze);
-            _context.SaveChanges();
-
-            return new JsonResult(SmjerIzBaze);
-
-
-
-
-
-        }
     }
 }

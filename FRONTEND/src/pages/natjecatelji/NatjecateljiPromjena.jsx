@@ -96,7 +96,7 @@ export default function NatjecateljiPromjena(){
                 </Form.Group>
 
                 <Form.Group controlId="Član">
-                    <Form.Check label="Član" name="Član" defaultChecked={natjecatelj.Clan   } />
+                    <Form.Check label="Član" name="Član" checked={natjecatelj.Clan   } />
                 </Form.Group>
 
                 <hr />
