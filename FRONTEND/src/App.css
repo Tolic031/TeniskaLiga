@@ -5,3 +5,17 @@
 .siroko{
   width: 100%;
 }
+
+
+.labelaAtributa:first-letter, .form-check-label:first-letter {
+  text-transform: uppercase;
+}
+
+
+
+/*div#root > div.container*/
+#pozadina{
+  background-image: url("/pozadina.jpeg");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}

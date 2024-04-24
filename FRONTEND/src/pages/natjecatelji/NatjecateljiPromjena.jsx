@@ -1,118 +1,68 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { RoutesNames } from "../../constants";
-import NatjecateljService from "../../services/NatjecateljService";
 import { useEffect, useState } from "react";
+import {  Container, Form } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
+import Service from "../../services/NatjecateljService";
+import { RoutesNames } from "../../constants";
+import InputText from "../../components/InputText";
+import InputCheckbox from "../../components/InputCheckbox";
+import Akcije from "../../components/Akcije";
+import useError from "../../hooks/useError";
 
+export default function NatjecateljiPromjeni(){
 
-export default function NatjecateljiPromjena(){
     const navigate = useNavigate();
     const routeParams = useParams();
     const [natjecatelj, setNatjecatelj] = useState({});
+    const { prikaziError } = useError();
 
    async function dohvatiNatjecatelje(){
-        const o = await NatjecateljService.getById(routeParams.id);
-        if(o.greska){
-            console.log(o.poruka);
-            alert('pogledaj konzolu');
+        const o = await Service.getById('Natjecatelj', routeParams.id);
+        if(!odgovor.ok){
+            prikaziError(odgovor.podaci);
+            navigate(RoutesNames.NATJECATELJ_PREGLED)
             return;
         }
-        setNatjecatelj(o.poruka);
+        setNatjecatelj(odgovor.podaci);
    }
-
-   async function promjeni(natjecatelj){
-    const odgovor = await NatjecateljService.put(routeParams.id,natjecatelj);
-    if (odgovor.greska){
-        console.log(odgovor.poruka);
-        alert('Pogledaj konzolu');
-        return;
-    }
-    navigate(RoutesNames.NATJECATELJ_PREGLED);
-}
 
    useEffect(()=>{
     dohvatiNatjecatelje();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
    },[]);
 
-    function obradiSubmit(e){ // e predstavlja event
+   async function promjeniNatjecatelje(natjecatelj){
+    const odgovor = await Service.promjeni('Natjecatelj',routeParams.id,natjecatelj);
+    if (odgovor.ok){
+        navigate(RoutesNames.NATJECATELJ_PREGLED)
+        return;
+    }
+    prikaziError(odgovor.podaci);
+}
+
+
+    function handleSubmit(e){ 
         e.preventDefault();
-        //alert('Dodajem smjer');
-
         const podaci = new FormData(e.target);
-
-        const natjecatelj = {
+        promjeniNatjecatelje({
             Ime: podaci.get('Ime'),  // 'naziv' je name atribut u Form.Control
             Prezime: podaci.get('Prezime'), 
             broj_Telefona: podaci.get('broj_Telefona'),
             Email: podaci.get('Email'),  
             Clan: podaci.get('clan')=='on' ? true : false             
-        };
-        //console.log(routeParams.sifra);
-        //console.log(smjer);
-        promjeni(natjecatelj);
-
+        });
     }
 
+    
     return (
 
         <Container>
-            <Form onSubmit={obradiSubmit}>
-
-                <Form.Group controlId="Ime">
-                    <Form.Label>Ime</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    name="Ime" 
-                    defaultValue={natjecatelj.ime}
-                    required />
-                </Form.Group>
-
-                <Form.Group controlId="Prezime">
-                    <Form.Label>Prezime</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    name="Prezime"
-                    defaultValue={natjecatelj.prezime}
-                     />
-                </Form.Group>
-
-
-                <Form.Group controlId="broj_Telefona">
-                    <Form.Label>broj_Telefona</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    name="broj_Telefona" 
-                    defaultValue={natjecatelj.broj_Telefona}
-                    required />
-                </Form.Group>
-
-                <Form.Group controlId="Email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    name="Email" 
-                    defaultValue={natjecatelj.email}
-                    required />
-                </Form.Group>
-
-                <Form.Group controlId="Član">
-                    <Form.Check label="Član" name="Član" checked={natjecatelj.Clan   } />
-                </Form.Group>
-
-                <hr />
-                <Row>
-                    <Col>
-                        <Link className="btn btn-danger siroko" to={RoutesNames.NATJECATELJ_PREGLED}>
-                            Odustani
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Button className="siroko" variant="primary" type="submit">
-                            Promjeni
-                        </Button>
-                    </Col>
-                </Row>
-
+            <Form onSubmit={handleSubmit}>
+                    <InputText atribut='Ime' vrijednost={natjecatelj.Ime} />
+                    <InputText atribut='Prezime' vrijednost={natjecatelj.Prezime} />
+                    <InputText atribut='broj_Telefona' vrijednost={natjecatelj.broj_Telefona} />
+                    <InputText atribut='Email' vrijednost={natjecatelj.Email} />
+                    <InputCheckbox atribut='Član' vrijednost={natjecatelj.Clan} />
+                    <Akcije odustani={RoutesNames.SMJER_PREGLED} akcija='Promjeni Natjecatelja' />
             </Form>
         </Container>
 

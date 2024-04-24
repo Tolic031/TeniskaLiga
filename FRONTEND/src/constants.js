@@ -6,3 +6,8 @@ export const RoutesNames = {
     NATJECATELJ_PROMJENI: '/natjecatelji/:id'
     
 };
+
+export const App = {
+    URL: 'https://neispavani-001-site1.etempurl.com',
+    DEV: false
+};

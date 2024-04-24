@@ -1,54 +1,49 @@
 import { useEffect, useState } from 'react';
-import Container from 'react-bootstrap/Container';
-import NatjecateljService from '../../services/NatjecateljService';
-import { Button, Table } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import {RoutesNames} from '../../constants'
+import {  Button, Container, Table } from "react-bootstrap";
+import Service from '../../services/NatjecateljService';
+import { NumericFormat } from "react-number-format";
+import { GrValidate } from "react-icons/gr";
+import { IoIosAdd } from "react-icons/io";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { RoutesNames } from "../../constants";
+import useError from "../../hooks/useError";
 
 
 export default function Natjecatelji(){
     const [natjecatelji, setNatjecatelji] = useState([]);
     const navigate = useNavigate();
-
+    const { prikaziError } = useError();
 
     async function dohvatiNatjecatelje(){
-        await NatjecateljService.get()
-        .then((odg)=>{
-            setNatjecatelji(odg.poruka);
-        })
-        .catch((e)=>{
-            console.log(e);
-        });
+        const odgovor = await Service.get('Natjecatelj');
+        if(!odgovor.ok){
+            prikaziError(odgovor.podaci);
+            return;
+        }
+        setNatjecatelji(odgovor.podaci);
     }
+
+    async function obrisiNatjecatelje(id){
+        const odgovor = await Service.obrisi('Natjecatelj',id);
+        prikaziError(odgovor.podaci);
+        if (odgovor.ok){
+            dohvatiNatjecatelje();
+        }
+    }
+
 
     useEffect(()=>{
         dohvatiNatjecatelje();
     },[]);
 
-    function formatirajClan(c){
-        if (c==null){
-        return 'Nije definirano';
-        }
-        if (c){
-           return 'DA';
-        }
-        return 'NE';  
-    }
+
+    
 
 
-    async function obrisiAsync(id){
-        const odgovor = await NatjecateljService._delete(id);
-        if (odgovor.greska){
-            console.log(odgovor.poruka);
-            alert('Pogledaj konzolu');
-            return;
-        }
-        dohvatiNatjecatelje();
-    }
-
-    function Clan(Natjecatelji){
-        if (Natjecatelji.Clan==null) return 'gray';
-        if(Natjecatelji.Clan) return 'green';
+    function Clan(natjecatelj){
+        if (natjecatelj.Clan==null) return 'gray';
+        if(natjecatelj.Clan) return 'green';
         return 'red';
     }
 
@@ -58,9 +53,6 @@ export default function Natjecatelji(){
         return 'NIJE verificiran';
     }
 
-    function obrisi(id){
-        obrisiAsync(id);
-    }
 
     return(
         <>
@@ -83,18 +75,18 @@ export default function Natjecatelji(){
                                 <td>{natjecatelj.prezime}</td>
                                 <td>{natjecatelj.broj_Telefona}</td>
                                 <td>{natjecatelj.email}</td>
-                                <td>
-                                    {formatirajClan(natjecatelj.clan)}
-                                    {/* {natjecatelj.clan == null
-                                    ? 'Nije definirano'
-                                    : natjecatelj.clan ? 'DA' : 'NE'}
-                                    */}
-                                    </td>
-                             
-                                <td>
+                                <td className="sredina">
+                                <GrValidate 
+                                size={30} 
+                                color={Clan(natjecatelj)}
+                                title={ClanTitle(natjecatelj)}
+                                />
+                                </td>
+                                  <td className='sredina'>
                                     <Button 
-                                    onClick={()=>obrisi(natjecatelj.id)}
                                     variant='danger'
+                                    onClick={()=>obrisiNatjecatelje(natjecatelj.id)}
+                                    
                                     >
                                         Obriši
                                     </Button>
