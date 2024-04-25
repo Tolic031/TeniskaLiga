@@ -49,8 +49,8 @@ export default function Natjecatelji(){
 
     function clanTitle(Natjecatelji){
         if (Natjecatelji.clan==null) return 'Nije definirano';
-        if(Natjecatelji.clan) return 'Verificiran';
-        return 'NIJE verificiran';
+        if(Natjecatelji.clan) return 'Član';
+        return 'NIJE Član';
     }
 
 
