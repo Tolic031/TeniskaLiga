@@ -78,7 +78,7 @@ export default function Natjecatelji(){
                                 <td className="sredina">
                                 <GrValidate 
                                 size={30} 
-                                color={clan(natjecatelj)}
+                                color={clan(natjecatelj)} 
                                 title={clanTitle(natjecatelj)}
                                 />
                                 </td>
