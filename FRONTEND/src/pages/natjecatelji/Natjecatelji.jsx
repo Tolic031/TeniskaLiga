@@ -41,15 +41,15 @@ export default function Natjecatelji(){
     
 
 
-    function Clan(natjecatelj){
-        if (natjecatelj.Clan==null) return 'gray';
-        if(natjecatelj.Clan) return 'green';
+    function clan(natjecatelj){
+        if (natjecatelj.clan==null) return 'gray';
+        if(natjecatelj.clan) return 'green';
         return 'red';
     }
 
-    function ClanTitle(Natjecatelji){
-        if (Natjecatelji.Clan==null) return 'Nije definirano';
-        if(Natjecatelji.Clan) return 'Verificiran';
+    function clanTitle(Natjecatelji){
+        if (Natjecatelji.clan==null) return 'Nije definirano';
+        if(Natjecatelji.clan) return 'Verificiran';
         return 'NIJE verificiran';
     }
 
@@ -78,8 +78,8 @@ export default function Natjecatelji(){
                                 <td className="sredina">
                                 <GrValidate 
                                 size={30} 
-                                color={Clan(natjecatelj)}
-                                title={ClanTitle(natjecatelj)}
+                                color={clan(natjecatelj)}
+                                title={clanTitle(natjecatelj)}
                                 />
                                 </td>
                                   <td className='sredina'>
