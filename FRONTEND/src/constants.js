@@ -3,7 +3,11 @@ export const RoutesNames = {
 
     NATJECATELJ_PREGLED: '/natjecatelji',
     NATJECATELJ_NOVI: '/natjecatelji/dodaj',
-    NATJECATELJ_PROMJENI: '/natjecatelji/:id'
+    NATJECATELJ_PROMJENI: '/natjecatelji/:id',
+
+    SEZONA_PREGLED: '/sezone',
+    SEZONA_NOVI: '/sezone/dodaj',
+    SEZONA_PROMJENI: '/sezone/:id'
     
 };
 

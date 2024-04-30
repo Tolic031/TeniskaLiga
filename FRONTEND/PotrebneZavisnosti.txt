@@ -7,3 +7,4 @@ npm install react-number-format
 npm install react-icons
 npm install moment
 npm install react-bootstrap-typeahead
+npm install highcharts highcharts-react-official

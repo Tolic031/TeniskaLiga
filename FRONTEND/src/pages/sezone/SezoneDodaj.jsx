@@ -6,6 +6,7 @@ import InputText from "../../components/InputText";
 import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
+import { dodaj } from "../../services/HttpService";
 
 export default function SezoneDodaj(){
     const navigate = useNavigate();
@@ -22,39 +23,28 @@ export default function SezoneDodaj(){
 
     function handleSubmit(e){ 
         e.preventDefault();
+
         const podaci = new FormData(e.target);
         
         if(podaci.get('datum')=='' && podaci.get('vrijeme')!=''){
             alert('Ako postavljate vrijeme morate i datum');
             return;
           }
-          let pocetak_sezone=null;
+          let datumpocetka=null;
           if(podaci.get('datum')!=''){
             if (podaci.get('vrijeme')!=''){
-              pocetak_sezone = moment.utc(podaci.get('datum') + ' ' + podaci.get('vrijeme'));
+              datumpocetka = moment.utc(podaci.get('datum') + ' ' + podaci.get('vrijeme'));
             }else{
-              pocetak_sezone = moment.utc(podaci.get('datum'));
-            }
-            
-          }
-          if(podaci.get('datum')=='' && podaci.get('vrijeme')!=''){
-            alert('Ako postavljate vrijeme morate i datum');
-            return;
-          }
-          let kraj_sezone=null;
-          if(podaci.get('datum')!=''){
-            if (podaci.get('vrijeme')!=''){
-              kraj_sezone = moment.utc(podaci.get('datum') + ' ' + podaci.get('vrijeme'));
-            }else{
-              kraj_sezone = moment.utc(podaci.get('datum'));
+              datumpocetka = moment.utc(podaci.get('datum'));
             }
             
           }
 
 
-        dodajSezone({
-            pocetak_sezone: pocetak_sezone,  
-            kraj_sezone: kraj_sezone, 
+
+        dodaj({
+            pocetak_sezone: datumpocetka,  
+            kraj_sezone: datumpocetka, 
             cijena: parseFloat(podaci.get('cijena')),
 
         });

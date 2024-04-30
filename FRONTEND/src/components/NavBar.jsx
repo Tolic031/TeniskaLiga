@@ -28,19 +28,24 @@ export default function NavBar(){
                     <NavDropdown title="Izbornik" id="collapsible-nav-dropdown">
                     <NavDropdown.Item 
                     onClick={()=>navigate(RoutesNames.NATJECATELJ_PREGLED)}
-                    >Natjecatelji</NavDropdown.Item>
-                   
-                    <NavDropdown.Item href="#action/3.2">
-                       Sezone
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">
-                        Mečevi
-                    </NavDropdown.Item>
+                    >Natjecatelji</NavDropdown.Item> 
+                   <NavDropdown.Item 
+                  onClick={()=>navigate(RoutesNames.SEZONA_PREGLED)}
+                  >
+                    Sezone
+                  </NavDropdown.Item>
+                  <NavDropdown.Item 
+                  onClick={()=>navigate(RoutesNames.MEČ_PREGLED)}
+                  >
+
+                    Grupe
+                  </NavDropdown.Item>
+                    </NavDropdown>
+                </Nav>              
+                
                 
 
-                    </NavDropdown>
-                </Nav>
-                
+
                 </Navbar.Collapse>
             </Container>
         </Navbar>

@@ -8,21 +8,25 @@ import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
 
-export default function SezonePromjeni(){
+
+export default function SezonePromjena(){
 
     const navigate = useNavigate();
     const routeParams = useParams();
     const [sezona, setSezone] = useState({});
     const { prikaziError } = useError();
+    const { showLoading, hideLoading } = useLoading();
 
    async function dohvatiSezone(){
-        const o = await Service.getById('Sezona', routeParams.id);
+        showLoading();
+        const odgovor = await Service.getById('Sezona',routeParams.id);
+        hideLoading();
         if(!odgovor.ok){
             prikaziError(odgovor.podaci);
             navigate(RoutesNames.SEZONA_PREGLED)
             return;
         }
-        setNatjecatelj(odgovor.podaci);
+        setSezone(odgovor.podaci);
    }
 
    useEffect(()=>{

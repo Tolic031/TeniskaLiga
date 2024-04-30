@@ -37,8 +37,8 @@ export default function Sezone(){
         dohvatiSezone();
     },[]);
 
-    function formatirajDatum(pocetak_sezone){
-        let mdp = moment.utc(pocetak_sezone);
+    function formatirajDatum(datumpocetka){
+        let mdp = moment.utc(datumpocetka);
         if(mdp.hour()==0 && mdp.minutes()==0){
             return mdp.format('DD. MM. YYYY.');
         }
@@ -47,15 +47,6 @@ export default function Sezone(){
         }
 
     
-    function formatirajDatum(kraj_sezone){
-        let mdp = moment.utc(kraj_sezone);
-        if(mdp.hour()==0 && mdp.minutes()==0){
-            return mdp.format('DD. MM. YYYY.');
-        }
-        return mdp.format('DD. MM. YYYY. HH:mm');
-            
-        }        
-
 
 
 
@@ -74,10 +65,10 @@ export default function Sezone(){
                         </tr>
                     </thead>
                     <tbody>
-                        {sezone && sezone.map((natjecatelj,index)=>(
+                        {sezone && sezone.map((sezona,index)=>(
                             <tr key={index}>
-                                <td>{sezona.pocetak_sezone}</td>
-                                <td>{sezona.kraj_sezone}</td>
+                                <td>{sezona.datumpocetka}</td>
+                                <td>{sezona.datumpocetka}</td>
                                 <td>{sezona.cijena}</td>
 
                                   <td className='sredina'>
