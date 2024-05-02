@@ -8,6 +8,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import useError from "../../hooks/useError";
+import moment from "moment";
 
 
 export default function Sezone(){
@@ -67,8 +68,8 @@ export default function Sezone(){
                     <tbody>
                         {sezone && sezone.map((sezona,index)=>(
                             <tr key={index}>
-                                <td>{sezona.datumpocetka}</td>
-                                <td>{sezona.datumpocetka}</td>
+                                <td>{sezona.pocetakSezone}</td>
+                                <td>{sezona.krajSezone}</td>
                                 <td>{sezona.cijena}</td>
 
                                   <td className='sredina'>

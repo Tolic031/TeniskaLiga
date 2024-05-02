@@ -24,7 +24,7 @@ namespace Backend.Models
         [Required(ErrorMessage = "Unesi datum završetka sezone")]
         DateTime KrajSezone,
         [Required(ErrorMessage = "Unesi cijenu")]
-        string Cijena);
+        decimal Cijena);
 
 
 

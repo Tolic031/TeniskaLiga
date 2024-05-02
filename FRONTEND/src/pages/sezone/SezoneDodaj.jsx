@@ -7,13 +7,23 @@ import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
 import { dodaj } from "../../services/HttpService";
+import moment from "moment";
 
 export default function SezoneDodaj(){
     const navigate = useNavigate();
     const {prikaziError} = useError();
 
-    async function dodajSezone(sezona){
+    async function dohvatiSezone(sezona){
         const odgovor = await Service.dodaj('Sezona', sezona);
+        if (odgovor.ok){
+            navigate(RoutesNames.SEZONA_PREGLED);
+            return;
+        }
+        prikaziError(odgovor.podaci);
+    }
+
+    async function SezonaDodaj(sezona){
+      const odgovor = await Service.dodaj('Sezona', sezona);
         if (odgovor.ok){
             navigate(RoutesNames.SEZONA_PREGLED);
             return;
@@ -42,9 +52,9 @@ export default function SezoneDodaj(){
 
 
 
-        dodaj({
-            pocetak_sezone: datumpocetka,  
-            kraj_sezone: datumpocetka, 
+          SezonaDodaj({
+            pocetakSezone: podaci.get('pocetakSezone'),  
+            krajSezone: podaci.get('krajSezone'),
             cijena: parseFloat(podaci.get('cijena')),
 
         });
@@ -54,9 +64,21 @@ export default function SezoneDodaj(){
 
         <Container>
             <Form onSubmit={handleSubmit}>
-                <InputText atribut='Početak sezone' vrijednost='' />
-                <InputText atribut='Kraj sezone' vrijednost='' />
-                <InputText atribut='Cijena' vrijednost='' />
+                <Form.Group className='mb-3' controlId='pocetakSezone'>
+                  <Form.Label>Početak</Form.Label>
+                  <Form.Control
+                    type='date'
+                    name='pocetakSezone'
+                  />
+                </Form.Group>
+                <Form.Group className='mb-3' controlId='krajSezone'>
+                  <Form.Label>Kraj</Form.Label>
+                  <Form.Control
+                    type='date'
+                    name='krajSezone'
+                  />
+                </Form.Group>
+                <InputText atribut='cijena' vrijednost='' />
                 <Akcije odustani={RoutesNames.SEZONA_PREGLED} akcija='Dodaj Sezonu' />
 
                 </Form>
