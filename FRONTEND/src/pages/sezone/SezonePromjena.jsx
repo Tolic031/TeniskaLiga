@@ -7,6 +7,7 @@ import InputText from "../../components/InputText";
 import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
+import moment from "moment";
 
 
 export default function SezonePromjena(){
@@ -17,7 +18,7 @@ export default function SezonePromjena(){
     const { prikaziError } = useError();
     const { showLoading, hideLoading } = useLoading();
 
-   async function dohvatiSezone(){
+   async function SezonePromjena(){
         showLoading();
         const odgovor = await Service.getById('Sezona',routeParams.id);
         hideLoading();
@@ -34,7 +35,7 @@ export default function SezonePromjena(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
    },[]);
 
-   async function promjeniSezone(sezona){
+   async function SezonePromjena(sezona){
     const odgovor = await Service.promjeni('Sezona',routeParams.id,sezona);
     if (odgovor.ok){
         navigate(RoutesNames.SEZONA_PREGLED)
@@ -47,12 +48,11 @@ export default function SezonePromjena(){
     function handleSubmit(e){ 
         e.preventDefault();
         const podaci = new FormData(e.target);
-        promjeniNatjecatelje({
-            Ime: podaci.get('Ime'),  // 'naziv' je name atribut u Form.Control
-            Prezime: podaci.get('Prezime'), 
-            broj_Telefona: podaci.get('broj_Telefona'),
-            Email: podaci.get('Email'),  
-            Clan: podaci.get('clan')=='on' ? true : false             
+        const datum = moment.utc(podaci.get('datum') + ' ' + podaci.get('vrijeme'));
+        SezonePromjena({
+            pocetakSezone: podaci.get('pocetakSezone'),  
+            krajSezone: podaci.get('krajSezone'),
+            cijena: parseFloat(podaci.get('cijena')),            
         });
     }
 
@@ -61,12 +61,22 @@ export default function SezonePromjena(){
 
         <Container>
             <Form onSubmit={handleSubmit}>
-                    <InputText atribut='Ime' vrijednost={natjecatelj.Ime} />
-                    <InputText atribut='Prezime' vrijednost={natjecatelj.Prezime} />
-                    <InputText atribut='broj_Telefona' vrijednost={natjecatelj.broj_Telefona} />
-                    <InputText atribut='Email' vrijednost={natjecatelj.Email} />
-                    <InputCheckbox atribut='Član' vrijednost={natjecatelj.Clan} />
-                    <Akcije odustani={RoutesNames.SMJER_PREGLED} akcija='Promjeni Natjecatelja' />
+                <Form.Group className='mb-3' controlId='pocetakSezone'>
+                  <Form.Label>Početak</Form.Label>
+                  <Form.Control
+                    type='date'
+                    name='pocetakSezone'
+                  />
+                </Form.Group>
+                <Form.Group className='mb-3' controlId='krajSezone'>
+                  <Form.Label>Kraj</Form.Label>
+                  <Form.Control
+                    type='date'
+                    name='krajSezone'
+                  />
+                </Form.Group>
+                <InputText atribut='cijena' vrijednost='' />
+                <Akcije odustani={RoutesNames.SEZONA_PREGLED} akcija='Promijeni Sezonu' />
             </Form>
         </Container>
 
