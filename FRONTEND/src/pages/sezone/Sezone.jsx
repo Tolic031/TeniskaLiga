@@ -82,7 +82,7 @@ export default function Sezone(){
                                     </Button>
                                         {/* kosi jednostruki navodnici `` su AltGR (desni) + 7 */}
                                     <Button 
-                                    onClick={()=>{navigate(`/natjecatelji/${sezone.id}`)}} 
+                                    onClick={()=>{navigate(`/Sezone/${sezone.id}`)}} 
                                     >
                                         Promjeni
                                     </Button>
