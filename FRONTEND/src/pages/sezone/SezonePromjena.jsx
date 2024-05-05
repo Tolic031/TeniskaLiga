@@ -16,12 +16,12 @@ export default function SezonePromjena(){
     const routeParams = useParams();
     const [sezona, setSezone] = useState({});
     const { prikaziError } = useError();
-    const { showLoading, hideLoading } = useLoading();
+
 
    async function SezonePromjena(){
-        showLoading();
+
         const odgovor = await Service.getById('Sezona',routeParams.id);
-        hideLoading();
+
         if(!odgovor.ok){
             prikaziError(odgovor.podaci);
             navigate(RoutesNames.SEZONA_PREGLED)
