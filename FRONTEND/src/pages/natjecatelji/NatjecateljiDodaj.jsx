@@ -6,13 +6,18 @@ import InputText from "../../components/InputText";
 import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
+import useLoading from "../../hooks/useLoading";
 
 export default function NatjecateljiDodaj(){
     const navigate = useNavigate();
     const {prikaziError} = useError();
+    const { showLoading, hideLoading } = useLoading();
+
 
     async function dodajNatjecatelja(natjecatelj){
+        showLoading();
         const odgovor = await Service.dodaj('Natjecatelj', natjecatelj);
+        hideLoading();
         if (odgovor.ok){
             navigate(RoutesNames.NATJECATELJ_PREGLED);
             return;

@@ -7,16 +7,20 @@ import InputText from "../../components/InputText";
 import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
+import useLoading from "../../hooks/useLoading";
 
 export default function NatjecateljiPromjeni(){
 
     const navigate = useNavigate();
     const routeParams = useParams();
     const [natjecatelj, setNatjecatelj] = useState({});
+    const { showLoading, hideLoading } = useLoading();
     const { prikaziError } = useError();
 
    async function dohvatiNatjecatelje(){
+        showLoading();
         const o = await Service.getById('Natjecatelj', routeParams.id);
+        hideLoading();
         if(!odgovor.ok){
             prikaziError(odgovor.podaci);
             navigate(RoutesNames.NATJECATELJ_PREGLED)
@@ -31,7 +35,9 @@ export default function NatjecateljiPromjeni(){
    },[]);
 
    async function promjeniNatjecatelje(natjecatelj){
+    showLoading();
     const odgovor = await Service.promjeni('Natjecatelj',routeParams.id,natjecatelj);
+    hideLoading();
     if (odgovor.ok){
         navigate(RoutesNames.NATJECATELJ_PREGLED)
         return;

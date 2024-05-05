@@ -8,13 +8,18 @@ import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
 import { dodaj } from "../../services/HttpService";
 import moment from "moment";
+import useLoading from "../../hooks/useLoading";
 
 export default function SezoneDodaj(){
     const navigate = useNavigate();
     const {prikaziError} = useError();
+    const { showLoading, hideLoading } = useLoading();
+
 
     async function dohvatiSezone(sezona){
+        showLoading();
         const odgovor = await Service.dodaj('Sezona', sezona);
+        hideLoading();
         if (odgovor.ok){
             navigate(RoutesNames.SEZONA_PREGLED);
             return;
@@ -23,7 +28,9 @@ export default function SezoneDodaj(){
     }
 
     async function SezonaDodaj(sezona){
+      showLoading();
       const odgovor = await Service.dodaj('Sezona', sezona);
+      hideLoading();
         if (odgovor.ok){
             navigate(RoutesNames.SEZONA_PREGLED);
             return;

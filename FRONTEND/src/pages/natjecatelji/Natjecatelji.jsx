@@ -29,7 +29,9 @@ export default function Natjecatelji(){
     }
 
     async function obrisiNatjecatelje(id){
+        showLoading();
         const odgovor = await Service.obrisi('Natjecatelj',id);
+        hideLoading();
         prikaziError(odgovor.podaci);
         if (odgovor.ok){
             dohvatiNatjecatelje();

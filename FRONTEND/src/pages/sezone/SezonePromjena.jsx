@@ -8,6 +8,7 @@ import InputCheckbox from "../../components/InputCheckbox";
 import Akcije from "../../components/Akcije";
 import useError from "../../hooks/useError";
 import moment from "moment";
+import useLoading from "../../hooks/useLoading";
 
 
 export default function SezonePromjena(){
@@ -16,12 +17,14 @@ export default function SezonePromjena(){
     const routeParams = useParams();
     const [sezona, setSezone] = useState({});
     const { prikaziError } = useError();
+    const { showLoading, hideLoading } = useLoading();
+
 
 
    async function SezonePromjena(){
-
+        showLoading();
         const odgovor = await Service.getById('Sezona',routeParams.id);
-
+        hideLoading();
         if(!odgovor.ok){
             prikaziError(odgovor.podaci);
             navigate(RoutesNames.SEZONA_PREGLED)
@@ -30,7 +33,9 @@ export default function SezonePromjena(){
         setSezone(odgovor.podaci);
    }
    async function dohvatiSezone() {
+    showLoading();
     const odgovor = await Service.get("Sezona");
+    hideLoading();
     if (!odgovor.ok) {
       prikaziError(odgovor.podaci);
       return;
@@ -75,6 +80,7 @@ export default function SezonePromjena(){
                   <Form.Control
                     type='date'
                     name='pocetakSezone'
+                    
                   />
                 </Form.Group>
                 <Form.Group className='mb-3' controlId='krajSezone'>

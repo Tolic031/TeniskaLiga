@@ -9,12 +9,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import useError from "../../hooks/useError";
 import moment from "moment";
+import useLoading from "../../hooks/useLoading";
+
 export default function Sezone() {
   const [sezone, setSezone] = useState([]);
   const navigate = useNavigate();
   const { prikaziError } = useError();
+  const { showLoading, hideLoading } = useLoading();
+
+
   async function dohvatiSezone() {
+    showLoading();
     const odgovor = await Service.get("Sezona");
+    hideLoading();
     if (!odgovor.ok) {
       prikaziError(odgovor.podaci);
       return;
@@ -22,7 +29,9 @@ export default function Sezone() {
     setSezone(odgovor.podaci);
   }
   async function obrisiSezone(id) {
+    showLoading();
     const odgovor = await Service.obrisi("Sezona", id);
+    hideLoading();
     prikaziError(odgovor.podaci);
     if (odgovor.ok) {
       dohvatiSezone();
