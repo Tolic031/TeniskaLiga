@@ -8,7 +8,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import useError from "../../hooks/useError";
-import LoadingSpinner from './components/LoadingSpinner'
+import useLoading from '../../hooks/useLoading';
 
 
 export default function Natjecatelji(){
