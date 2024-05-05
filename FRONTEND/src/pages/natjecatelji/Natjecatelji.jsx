@@ -8,15 +8,19 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { RoutesNames } from "../../constants";
 import useError from "../../hooks/useError";
+import LoadingSpinner from './components/LoadingSpinner'
 
 
 export default function Natjecatelji(){
     const [natjecatelji, setNatjecatelji] = useState([]);
     const navigate = useNavigate();
+    const { showLoading, hideLoading } = useLoading();
     const { prikaziError } = useError();
 
     async function dohvatiNatjecatelje(){
+        showLoading();
         const odgovor = await Service.get('Natjecatelj');
+        hideLoading();
         if(!odgovor.ok){
             prikaziError(odgovor.podaci);
             return;

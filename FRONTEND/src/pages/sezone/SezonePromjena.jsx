@@ -29,6 +29,15 @@ export default function SezonePromjena(){
         }
         setSezone(odgovor.podaci);
    }
+   async function dohvatiSezone() {
+    const odgovor = await Service.get("Sezona");
+    if (!odgovor.ok) {
+      prikaziError(odgovor.podaci);
+      return;
+    }
+    
+    setSezone(odgovor.podaci);
+  }
 
    useEffect(()=>{
     dohvatiSezone();

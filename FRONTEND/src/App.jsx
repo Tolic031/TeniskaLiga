@@ -18,6 +18,7 @@ import SezonePromjena from './pages/sezone/SezonePromjena'
 
 import ErrorModal from './components/ErrorModal';
 import useError from "./hooks/useError"
+import LoadingSpinner from './components/LoadingSpinner'
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
   return (
     <>
        <ErrorModal show={prikaziErrorModal} errors={errors} onHide={sakrijError} />
+       <LoadingSpinner />
       <NavBar />
       <Routes>
         <Route path={RoutesNames.HOME} element={<Pocetna />} />
